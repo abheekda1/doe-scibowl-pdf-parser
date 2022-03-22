@@ -36,6 +36,8 @@ func main() {
 		panic(err)
 	}
 
+  content = strings.ReplaceAll(content, "~", "")
+
 	var formattedQuestions []Question
 
 	questionList := strings.Split(strings.ReplaceAll(strings.ReplaceAll(content, "\n", ""), "  ", " "), "TOSS-UP ")
@@ -80,8 +82,9 @@ func getQuestionObj(question string) (*Question, error) {
 
 	category := ""
 	for _, cat := range categories {
-		if len(strings.Split(TU, cat)) == 2 {
-			category = cat
+    catExp := regexp.MustCompile(`(?i)` + cat)
+		if catExp.MatchString(TU) {
+			category = catExp.FindString(TU)
 			break
 		}
 	}
@@ -94,6 +97,14 @@ func getQuestionObj(question string) (*Question, error) {
 		return nil, fmt.Errorf("math")
 	}
 
+  if strings.Contains(TU, category + " –") {
+    TU = strings.Replace(TU, " –", "", 1)
+  }
+
+  if strings.Contains(B, category + " –") {
+    B = strings.Replace(B, " –", "", 1)
+  }
+    
 	tuFormat := strings.Join(strings.SplitN(strings.SplitN(TU, category+" ", 2)[1], " ", 4)[0:2], " ")
 	tuQuestion := strings.SplitN(strings.SplitN(TU, " ANSWER:", 2)[0], tuFormat+" ", 2)[1]
 	tuAnswer := strings.SplitN(TU, "ANSWER: ", 2)[1]
@@ -102,10 +113,10 @@ func getQuestionObj(question string) (*Question, error) {
 	bQuestion := strings.SplitN(strings.SplitN(B, " ANSWER:", 2)[0], bFormat+" ", 2)[1]
 	bAnswer := strings.SplitN(B, "ANSWER: ", 2)[1]
 
-	footerExp := regexp.MustCompile(`(?i)\s+(High|Middle)?( School )?Round \d.*`)
+	footerExp := regexp.MustCompile(`(?i)\s*(High School |Middle School |\d+\s*Regional.*)?Round \d.*`)
 
 	q := Question{
-		Category:       strings.TrimSpace(category),
+		Category:       strings.ToUpper(strings.TrimSpace(category)),
 		TossupFormat:   strings.TrimSpace(tuFormat),
 		TossupQuestion: strings.TrimSpace(tuQuestion),
 		TossupAnswer:   strings.TrimSpace(footerExp.ReplaceAllString(tuAnswer, "")),
