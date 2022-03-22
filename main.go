@@ -102,7 +102,7 @@ func getQuestionObj(question string) (*Question, error) {
 	bQuestion := strings.SplitN(strings.SplitN(B, " ANSWER:", 2)[0], bFormat+" ", 2)[1]
 	bAnswer := strings.SplitN(B, "ANSWER: ", 2)[1]
 
-	footerExp := regexp.MustCompile(`\s+(High|Middle) School Round \d.*`)
+	footerExp := regexp.MustCompile(`(?i)\s+(High|Middle)?( School )?Round \d.*`)
 
 	q := Question{
 		Category:       strings.TrimSpace(category),
@@ -119,7 +119,6 @@ func getQuestionObj(question string) (*Question, error) {
 
 func readPdf(path string) (string, error) {
 	f, r, err := pdf.Open(path)
-	// remember close file
 	defer f.Close()
 	if err != nil {
 		return "", err
