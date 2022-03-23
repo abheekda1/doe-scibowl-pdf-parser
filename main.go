@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -26,7 +27,7 @@ func main() {
 	// Check arg length to see if at least one argument was supplied, if not then panic
 	argLength := len(os.Args[1:])
 	if argLength < 1 {
-		panic(fmt.Errorf("failed to detect file"))
+		log.Fatal(fmt.Errorf("failed to detect file"))
 	}
 
 	// Set PDF file to the first argument, output file is
@@ -36,7 +37,7 @@ func main() {
 
 	content, err := readPdf(pdfFile)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	content = strings.ReplaceAll(content, "~", "")
@@ -51,7 +52,7 @@ func main() {
 			if err.Error() == "math" {
 				continue
 			} else {
-				panic(err)
+				log.Fatal(err)
 			}
 		}
 
@@ -61,7 +62,7 @@ func main() {
 	// Create a JSON array object from the array of question
 	questionJson, err := json.MarshalIndent(formattedQuestions, "", "  ")
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	// Save the JSON to a file to be later used elsewhere
