@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"os"
+	"net/http"
 	"regexp"
 	"strings"
+	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/ledongthuc/pdf"
 )
 
@@ -24,23 +25,34 @@ type Question struct {
 }
 
 func main() {
-	// Check arg length to see if at least one argument was supplied, if not then panic
-	argLength := len(os.Args[1:])
-	if argLength < 1 {
-		log.Fatal(fmt.Errorf("failed to detect file"))
+	r := mux.NewRouter()
+	r.HandleFunc("/pdf", pdfHandler).Methods("POST")
+
+	srv := &http.Server{
+		Handler:      r,
+		Addr:         "127.0.0.1:8000",
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
 	}
 
-	// Set PDF file to the first argument, output file is
-	// either the pdf file
-	pdfFile := os.Args[1]
-	outFile := strings.TrimSuffix(pdfFile, ".pdf") + ".json"
+	log.Fatal(srv.ListenAndServe())
+}
 
-	content, err := readPdf(pdfFile)
+func pdfHandler(w http.ResponseWriter, r *http.Request) {
+	file, _, err := r.FormFile("file")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	content = strings.ReplaceAll(content, "~", "")
+	var buf bytes.Buffer
+	buf.ReadFrom(file)
+	readerAt := bytes.NewReader(buf.Bytes())
+	//fmt.Println(buf.String())
+
+	content, err := readPdf(readerAt)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	var formattedQuestions []Question
 
@@ -65,8 +77,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Save the JSON to a file to be later used elsewhere
-	ioutil.WriteFile(outFile, questionJson, os.ModePerm)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(questionJson)
 }
 
 func getQuestionObj(question string) (*Question, error) {
@@ -86,10 +98,9 @@ func getQuestionObj(question string) (*Question, error) {
 	TU := strings.SplitN(question, "BONUS ", 2)[0] // Toss-Up question
 	B := strings.SplitN(question, "BONUS ", 2)[1]  // Bonus question
 
-	/* Category is an empty string to begin with
-	 * and is defined by looping through valid categories
-	 * until a case-insensitive regex match is found
-	 */
+	// Category is an empty string to begin with
+	// and is defined by looping through valid categories
+	// until a case-insensitive regex match is found
 	category := ""
 	for _, cat := range categories {
 		catExp := regexp.MustCompile(`(?i)` + cat) // Case-insensitive version of the category
@@ -146,19 +157,18 @@ func getQuestionObj(question string) (*Question, error) {
 	return &q, nil
 }
 
-// This example is taken from the source of the PDF package in use
-func readPdf(path string) (string, error) {
-	f, r, err := pdf.Open(path)
+// Read PDF data from a bytes reader and return raw text
+func readPdf(file *bytes.Reader) (string, error) {
+	r, err := pdf.NewReader(file, file.Size())
 	if err != nil {
 		return "", err
 	}
 
-	defer f.Close()
 	var buf bytes.Buffer
-	b, err := r.GetPlainText()
+	pdfData, err := r.GetPlainText()
 	if err != nil {
 		return "", err
 	}
-	buf.ReadFrom(b)
+	buf.ReadFrom(pdfData)
 	return buf.String(), nil
 }
