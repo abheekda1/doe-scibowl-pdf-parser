@@ -1,4 +1,4 @@
-module doe-pdf-parser
+module doe-scibowl-pdf-parser
 
 go 1.17
 
