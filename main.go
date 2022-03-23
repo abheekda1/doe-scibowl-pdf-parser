@@ -129,7 +129,7 @@ func getQuestionObj(question string) (*Question, error) {
 
 	// Remove the footer which often trails the bonus answer as it's on the bottom of the page
 	// FIXME: some formats still don't get picked up by this regex
-	footerExp := regexp.MustCompile(`(?i)\s*(High School |Middle School |\d+\s*Regional.*)?Round \d.*`)
+	footerExp := regexp.MustCompile(`(?i)\s*((20|19)\d+.*Regional.*)?(High School |Middle School )?(Round|Questions).*\s+Page\s*\d+.*`)
 
 	// Create a question object to return
 	q := Question{
