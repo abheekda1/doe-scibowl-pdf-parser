@@ -8,4 +8,4 @@ pipeline:
   test:
     image: golang:1.18
     commands:
-      - go test
+      - go test -v ./...
