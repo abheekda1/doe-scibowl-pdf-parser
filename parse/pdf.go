@@ -19,6 +19,11 @@ func ReadPdfToString(file *bytes.Reader) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	buf.ReadFrom(pdfData)
+
+	_, err = buf.ReadFrom(pdfData)
+	if err != nil {
+		return "", err
+	}
+
 	return strings.TrimSpace(buf.String()), nil
 }

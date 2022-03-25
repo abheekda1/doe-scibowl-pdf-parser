@@ -34,7 +34,11 @@ func pdfHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var buf bytes.Buffer
-	buf.ReadFrom(file)
+	_, err = buf.ReadFrom(file)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	readerAt := bytes.NewReader(buf.Bytes())
 
 	content, err := parse.ReadPdfToString(readerAt)
@@ -66,5 +70,8 @@ func pdfHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(questionJson)
+	_, err = w.Write(questionJson)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
