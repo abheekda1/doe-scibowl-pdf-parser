@@ -44,9 +44,9 @@ func GetQuestionObj(question string) (*Question, error) {
 	// until a case-insensitive regex match is found
 	category := ""
 	for _, cat := range categories {
-		catExp := regexp.MustCompile(`(?i)` + cat) // Case-insensitive version of the category
-		if catExp.MatchString(TU) {
-			category = catExp.FindString(TU)
+		catExp := regexp.MustCompile(`(?i)^\s*` + cat) // Case-insensitive version of the category
+		if catExp.MatchString(strings.SplitN(TU, " ", 2)[1]) {
+			category = catExp.FindString(strings.SplitN(TU, " ", 2)[1])
 			break
 		}
 	}
