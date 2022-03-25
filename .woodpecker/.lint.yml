@@ -1,0 +1,6 @@
+pipeline:
+  lint:
+    image: "golang:latest"
+    commands:
+      - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
+      - golangci-lint run
