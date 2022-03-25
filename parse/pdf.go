@@ -2,6 +2,7 @@ package parse
 
 import (
 	"bytes"
+	"strings"
 
 	"github.com/ledongthuc/pdf"
 )
@@ -19,5 +20,5 @@ func ReadPdfToString(file *bytes.Reader) (string, error) {
 		return "", err
 	}
 	buf.ReadFrom(pdfData)
-	return buf.String(), nil
+	return strings.TrimSpace(buf.String()), nil
 }
