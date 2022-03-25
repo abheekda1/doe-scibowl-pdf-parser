@@ -49,11 +49,7 @@ func pdfHandler(w http.ResponseWriter, r *http.Request) {
 	for i := 1; i < len(questionList); i++ {
 		q, err := parse.GetQuestionObj(questionList[i])
 		if err != nil {
-			if err.Error() == "math" {
-				continue
-			} else {
-				log.Fatal(err)
-			}
+			log.Fatal(err)
 		}
 
 		formattedQuestions = append(formattedQuestions, *q)

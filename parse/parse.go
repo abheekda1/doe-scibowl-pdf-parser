@@ -55,11 +55,6 @@ func GetQuestionObj(question string) (*Question, error) {
 		return nil, fmt.Errorf("category not found")
 	}
 
-	// Return if it's math as math is currently broken
-	if category == "MATH" {
-		return nil, fmt.Errorf("math")
-	}
-
 	// Replace the first dash from Toss-Ups and bonuses
 	// if it appears after the category, helps with
 	// format detection later on
