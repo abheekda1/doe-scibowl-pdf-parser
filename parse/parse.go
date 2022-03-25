@@ -53,6 +53,8 @@ func GetQuestionObj(question string) (*Question, error) {
 
 	if category == "" {
 		return nil, fmt.Errorf("category not found")
+	} else if strings.ToUpper(category) == "MATH" {
+		return nil, fmt.Errorf("category is math")
 	}
 
 	// Replace the first dash from Toss-Ups and bonuses
