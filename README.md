@@ -1,5 +1,5 @@
 # DOE Science Bowl PDF Parser
-![CI Status Badge](https://ci.adawesome.tech/api/badges/ADawesomeguy/doe-scibowl-pdf-parser/status.svg)  
+[![status-badge](https://ci.adawesome.tech/api/badges/ADawesomeguy/doe-scibowl-pdf-parser/status.svg)](https://ci.adawesome.tech/ADawesomeguy/doe-scibowl-pdf-parser)  
 Easy-to-use program written in Go to extract DOE Science Bowl packets to raw JSON
 
 ## Scope
