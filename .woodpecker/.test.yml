@@ -3,6 +3,13 @@ pipeline:
     image: golang:1.18
     commands:
       - go test -v ./... -race -covermode=atomic -coverprofile="coverage.out"
+  coverage:
+    image: plugins/codecov
+    settings:
+      token:
+        from_secret: codecov-token
+      files:
+      - coverage.out
   
 depends_on:
   - build
