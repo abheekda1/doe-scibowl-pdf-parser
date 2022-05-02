@@ -1,6 +1,5 @@
 pipeline:
   lint:
-    image: "golang:latest"
+    image: "golangci/golangci-lint"
     commands:
-      - go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
-      - golangci-lint run
+      - golangci-lint run -v
