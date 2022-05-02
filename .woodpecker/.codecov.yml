@@ -1,0 +1,12 @@
+pipeline:
+  coverage:
+    image: plugins/codecov
+    settings:
+      token:
+        from_secret: codecov-token
+      files:
+      - coverage.out
+
+depends_on:
+  - build
+  - test
