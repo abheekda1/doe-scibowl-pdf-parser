@@ -34,3 +34,15 @@ func TestParseInvalidCategory(t *testing.T) {
 		t.Errorf("expected a non-nil error and a nil question, received a(n) %q error and a(n) %q question", err, got)
 	}
 }
+
+func TestParseMathCategory(t *testing.T) {
+	got, err := GetQuestionObj("1) Math - Short Answer: What is the volume of a sphere of radius \"R\"? ANSWER: (4/3) p R3 BONUS 1) Short Answer - What is the surface area of a sphere of radius \"r\"? ANSWER: 4 p R2 or 12.566 x R2")
+
+	if err != nil && got == nil {
+		if err.Error() != "category is math" {
+			t.Errorf("expected error \"category is math\", received %q", err)
+		}
+	} else {
+		t.Errorf("expected a non-nil error and a nil question, received a(n) %q error and a(n) %q question", err, got)
+	}
+}
