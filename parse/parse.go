@@ -36,6 +36,10 @@ func GetQuestionObj(question string) (*Question, error) {
 		"ASTRONOMY",
 	}
 
+  if len(strings.SplitN(question, "BONUS ", 2)) < 2 {
+    return nil, fmt.Errorf("missing toss-up bonus pair")
+  }
+
 	TU := strings.SplitN(question, "BONUS ", 2)[0] // Toss-Up question
 	B := strings.SplitN(question, "BONUS ", 2)[1]  // Bonus question
 
