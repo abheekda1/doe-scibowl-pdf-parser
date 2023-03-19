@@ -79,7 +79,6 @@ func pdfHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Create a JSON array object from the array of question
 	questionJson, err := json.MarshalIndent(formattedQuestions, "", "  ")
-	fmt.Println(questionJson)
 	if err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)

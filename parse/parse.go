@@ -36,12 +36,17 @@ func GetQuestionObj(question string) (*Question, error) {
 		"ASTRONOMY",
 	}
 
-  if len(strings.SplitN(question, "BONUS ", 2)) < 2 {
+  question = strings.TrimSpace(question)
+
+  if len(strings.SplitN(question, "BONUS", 2)) < 2 {
     return nil, fmt.Errorf("missing toss-up bonus pair")
   }
 
-	TU := strings.SplitN(question, "BONUS ", 2)[0] // Toss-Up question
-	B := strings.SplitN(question, "BONUS ", 2)[1]  // Bonus question
+	TU := strings.TrimSpace(strings.SplitN(question, "BONUS", 2)[0]) // Toss-Up question
+	B := strings.TrimSpace(strings.SplitN(question, "BONUS", 2)[1])  // Bonus question
+
+  fmt.Printf("Toss-Up: %s\n", TU)
+  fmt.Printf("Bonus: %s\n", B)
 
 	// Category is an empty string to begin with
 	// and is defined by looping through valid categories
